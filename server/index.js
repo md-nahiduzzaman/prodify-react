@@ -18,7 +18,12 @@ const port = process.env.PORT || 5000;
 // middleware
 app.use(
   cors({
-    origin: ["http://localhost:5173", "http://localhost:5174"],
+    origin: [
+      "http://localhost:5173",
+      "http://localhost:5174",
+      "https://prodify-react.firebaseapp.com",
+      "https://prodify-react.web.app",
+    ],
     credentials: true,
   })
 );
@@ -56,7 +61,7 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // collections
-    const usersCollection = client.db("flowHr").collection("users");
+    const usersCollection = client.db("prodify").collection("users");
 
     // jwt generator
     app.post("/jwt", async (req, res) => {
