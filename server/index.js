@@ -62,6 +62,7 @@ async function run() {
   try {
     // collections
     const usersCollection = client.db("prodify").collection("users");
+    const productsCollection = client.db("prodify").collection("products");
 
     // jwt generator
     app.post("/jwt", async (req, res) => {
@@ -171,6 +172,98 @@ async function run() {
       res.send(result);
     });
 
+    // GET route to fetch all products
+    app.get("/products", async (req, res) => {
+      const {
+        page = 1,
+        limit = 8,
+        search = "",
+        category = "",
+        brand = "",
+        minPrice = 0,
+        maxPrice = Infinity,
+        sort = "",
+      } = req.query;
+      const skip = (page - 1) * limit;
+      const query = {};
+
+      if (search) {
+        query.name = { $regex: search, $options: "i" };
+      }
+
+      if (category) {
+        query.category = { $in: category.split(",") };
+      }
+
+      if (brand) {
+        query.brand = { $in: brand.split(",") };
+      }
+
+      if (minPrice || maxPrice) {
+        query.price = {
+          $gte: parseFloat(minPrice),
+          $lte: parseFloat(maxPrice),
+        };
+      }
+
+      const sortOption =
+        {
+          "price-ASC": { price: 1 },
+          "price-DESC": { price: -1 },
+          "dateAdded-ASC": { dateAdded: 1 },
+          "dateAdded-DESC": { dateAdded: -1 },
+        }[sort] || {};
+
+      try {
+        const products = await client
+          .db("prodify")
+          .collection("products")
+          .find(query)
+          .sort(sortOption)
+          .skip(parseInt(skip))
+          .limit(parseInt(limit))
+          .toArray();
+
+        const totalProducts = await client
+          .db("prodify")
+          .collection("products")
+          .countDocuments(query);
+
+        res.json({
+          products,
+          totalPages: Math.ceil(totalProducts / limit),
+        });
+      } catch (error) {
+        res.status(500).json({ message: "Error fetching products" });
+      }
+    });
+
+    // Pagination
+    app.get("/products", async (req, res) => {
+      const page = parseInt(req.query.page) || 1;
+      const limit = parseInt(req.query.limit) || 20;
+      const skip = (page - 1) * limit;
+
+      try {
+        const productsCollection = client.db("prodify").collection("products");
+        const totalProducts = await productsCollection.countDocuments();
+        const products = await productsCollection
+          .find({})
+          .skip(skip)
+          .limit(limit)
+          .toArray();
+
+        res.json({
+          totalProducts,
+          totalPages: Math.ceil(totalProducts / limit),
+          currentPage: page,
+          products,
+        });
+      } catch (err) {
+        res.status(500).json({ error: "Internal Server Error" });
+      }
+    });
+
     // Connect the client to the server	(optional starting in v4.7)
     // await client.connect();
     // Send a ping to confirm a successful connection
@@ -187,7 +280,7 @@ run().catch(console.dir);
 
 // test
 app.get("/", (req, res) => {
-  res.send("FlowHR server is Running");
+  res.send("Prodify server is Running");
 });
 
 app.listen(port, () => {
