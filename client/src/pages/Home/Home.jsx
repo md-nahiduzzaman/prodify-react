@@ -61,7 +61,7 @@ const Home = () => {
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
-    setCurrentPage(1); // Reset to first page when search term changes
+    setCurrentPage(1);
   };
 
   const handleCategoryChange = (event) => {
@@ -71,7 +71,7 @@ const Home = () => {
         ? prev.filter((cat) => cat !== value)
         : [...prev, value]
     );
-    setCurrentPage(1); // Reset to first page when category changes
+    setCurrentPage(1);
   };
 
   const handleBrandChange = (event) => {
@@ -81,12 +81,12 @@ const Home = () => {
         ? prev.filter((br) => br !== value)
         : [...prev, value]
     );
-    setCurrentPage(1); // Reset to first page when brand changes
+    setCurrentPage(1);
   };
 
   const handleSortChange = (event) => {
     setSortOption(event.target.value);
-    setCurrentPage(1); // Reset to first page when sorting changes
+    setCurrentPage(1);
   };
 
   return (
@@ -118,12 +118,12 @@ const Home = () => {
                     <input
                       type="checkbox"
                       className="form-checkbox text-indigo-600 h-4 w-4"
-                      value="Electronics"
-                      checked={category.includes("Electronics")}
+                      value="Laptops"
+                      checked={category.includes("Laptops")}
                       onChange={handleCategoryChange}
                     />
                     <span className="ml-2 text-[14px] text-[#111]">
-                      Electronics
+                      Laptops
                     </span>
                   </label>
                   <label className="flex items-center">
@@ -173,13 +173,11 @@ const Home = () => {
                     <input
                       type="checkbox"
                       className="form-checkbox text-indigo-600 h-4 w-4"
-                      value="Samsung"
-                      checked={brand.includes("Samsung")}
+                      value="HP"
+                      checked={brand.includes("HP")}
                       onChange={handleBrandChange}
                     />
-                    <span className="ml-2 text-[14px] text-[#111]">
-                      Samsung
-                    </span>
+                    <span className="ml-2 text-[14px] text-[#111]">HP</span>
                   </label>
                   <label className="flex items-center">
                     <input
