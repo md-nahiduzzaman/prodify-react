@@ -59,7 +59,7 @@ const Navbar = () => {
                 </div>
                 <a className="text-2xl font-medium">Prodify</a>
               </div>
-              <div className="navbar-center hidden lg:flex">
+              {/* <div className="navbar-center hidden lg:flex">
                 <div className="form-control">
                   <input
                     type="text"
@@ -67,7 +67,7 @@ const Navbar = () => {
                     className="input input-bordered w-24 md:w-auto"
                   />
                 </div>
-              </div>
+              </div> */}
               <div className="navbar-end">
                 {!user ? (
                   <>
